@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Місія: Числова пряма</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600&family=Unbounded:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#e8f1f3;--ink:#0f2a33;--card:#fff;--muted:#506a74;--seg:#14908b;--acc:#e8473b;--ok:#1b8a4b;--no:#c0392b;--rule:#b9cdd3}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1d23;--ink:#e4f0f2;--card:#13303a;--muted:#8fb0ba;--seg:#3cc9c2;--acc:#ff6f61;--ok:#4cd08a;--no:#ff7b6e;--rule:#2b4a55}}
+:root[data-theme="dark"]{--bg:#0c1d23;--ink:#e4f0f2;--card:#13303a;--muted:#8fb0ba;--seg:#3cc9c2;--acc:#ff6f61;--ok:#4cd08a;--no:#ff7b6e;--rule:#2b4a55}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.05rem/1.55 Onest,system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:24px 18px 60px}
+h1,h2{font-family:Unbounded,Onest,sans-serif;font-weight:600;line-height:1.2;margin:0}
+h1{font-size:clamp(1.6rem,6vw,2.6rem)}
+h2{font-size:clamp(1.15rem,3.6vw,1.45rem);margin-bottom:6px}
+.sub{color:var(--muted);margin:8px 0 18px}
+.keys{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}@media(max-width:520px){.keys{grid-template-columns:1fr}}
+.keys button{font:inherit;text-align:left;padding:14px 16px;border:2px dashed var(--rule);border-radius:14px;background:var(--card);color:var(--ink);cursor:pointer}.keys button:hover{border-color:var(--seg)}.keys b{display:block;font-family:Unbounded,Onest,sans-serif;font-size:1rem}.keys small{color:var(--muted)}.keys .got{border:2px solid var(--ok)}.keys .got b::before{content:"✓ ";color:var(--ok)}
+dialog{width:min(760px,96vw);max-height:92vh;border:0;border-radius:16px;padding:22px 20px;background:var(--bg);color:var(--ink);box-sizing:border-box}dialog::backdrop{background:rgba(5,20,25,.6)}.x{float:right;margin:0 0 8px 8px}
+svg{width:100%;height:auto;display:block;background:var(--card);border-radius:12px;margin:8px 0;overflow:visible}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;margin:10px 0}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+label{display:flex;align-items:center;gap:8px;font-weight:600}
+input[type=range]{flex:1;accent-color:var(--seg)}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--acc)}
+.read{background:var(--card);border-radius:12px;padding:12px 16px;margin:10px 0}
+.read b{font-size:1.5rem;color:var(--acc);font-variant-numeric:tabular-nums}
+.read div{margin:2px 0}
+.task{border:2px solid var(--seg);border-radius:12px;padding:12px 16px;margin:14px 0}
+.b{font:inherit;font-weight:600;background:var(--ink);color:var(--bg);border:0;border-radius:10px;padding:10px 18px;cursor:pointer;margin-top:8px}
+.o{display:block;width:100%;text-align:left;padding:12px 14px;margin:8px 0;border:2px solid var(--rule);background:var(--card);color:var(--ink);border-radius:10px;font:inherit;font-size:1.1rem;cursor:pointer}
+.o:hover:not(:disabled){border-color:var(--seg)}
+.o.sel{border-color:var(--seg);background:color-mix(in srgb,var(--seg) 18%,var(--card))}
+.o.ok{border-color:var(--ok);border-width:3px}.o.no{border-color:var(--no);border-width:3px}
+.cnt,.lab{color:var(--muted);margin:6px 0 0;font-weight:600}.q{font-weight:600;margin:8px 0}
+.res{font-size:1.3rem;font-weight:600}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+details{background:var(--card);border-radius:12px;padding:12px 16px;margin-top:40px}
+summary{cursor:pointer;font-weight:600}
+li{margin:6px 0}.nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.nav .b{margin-top:0}.b:disabled{opacity:.4;cursor:default}
+input[type=text]{font:inherit;width:100%;box-sizing:border-box;padding:12px 14px;border:2px solid var(--rule);border-radius:10px;background:var(--card);color:var(--ink)}
+.keys .wide{grid-column:1/-1;border:2px solid var(--acc)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}.chip{font:inherit;font-weight:600;min-width:38px;height:36px;padding:0 6px;border-radius:8px;border:2px solid var(--rule);background:var(--card);color:var(--ink);cursor:pointer}
+.chip.cur{border-color:var(--seg);box-shadow:0 0 0 2px var(--seg)}.chip.dn{background:color-mix(in srgb,var(--seg) 25%,var(--card))}.chip.ok{border-color:var(--ok);color:var(--ok);cursor:default}.chip.no{border-color:var(--no);color:var(--no);cursor:default}
+.cert{background:var(--card);border:3px solid var(--seg);border-radius:16px;padding:20px;text-align:center}.cert .snm{font-family:Unbounded,Onest,sans-serif;font-size:clamp(1.3rem,5vw,2rem);margin:6px 0;word-break:break-word}.cert .gr{font-size:1.2rem;margin:6px 0}.cert .gr b{font-family:Unbounded,Onest,sans-serif;font-size:2.8rem;color:var(--acc)}.cert .chips{justify-content:center}
+#fin{display:none;background:var(--seg);color:#fff;border-radius:14px;padding:16px 20px;margin:30px 0}
+#fin h2{color:#fff}
+</style>
+</head>
+<body>
+<main>
+<h1>Місія: Числова пряма</h1>
+<p class="sub">Алгебра, 9 клас. Тема: числові проміжки. Щоб відкрити фінальний сейф, здобудьте чотири ключі. Кожна місія відкривається в окремому вікні.</p>
+<div class="keys">
+<button id="k1" data-w="w1"><b>Місія 1. Розвідка</b><small>Інтерактивна числова пряма</small></button>
+<button id="k2" data-w="w2"><b>Місія 2. Шифри</b><small>Проміжки, ∩ та ∪</small></button>
+<button id="k3" data-w="w3"><b>Місія 3. Сейф</b><small>Чи належить число проміжку</small></button>
+<button id="k4" data-w="w4"><b>Місія 4. Практика</b><small>Прикладні задачі з життя</small></button>
+<button class="wide" data-w="w5"><b>Підсумковий тест</b><small>12 завдань від легших до складніших. Оцінка за 12-бальною шкалою</small></button>
+</div>
+
+<dialog id="w1"><button class="b x" onclick="this.closest('dialog').close()">✕ Закрити</button>
+<h2>Місія 1. Розвідка</h2>
+<p>Побудуйте проміжок самостійно: змінюйте його кінці, обирайте включення крайніх точок і, за потреби, нескінченність. Заповнена точка входить у проміжок, порожня — не входить. Біля нескінченності дужка завжди кругла.</p>
+<div id="v1"></div>
+<div class="grid">
+<label>a <input type="range" id="a" min="-5" max="4" value="-2"></label>
+<label>b <input type="range" id="b" min="-4" max="5" value="3"></label>
+<label><input type="checkbox" id="la" checked> a входить</label>
+<label><input type="checkbox" id="rb"> b входить</label>
+<label><input type="checkbox" id="iL"> лівий кінець −∞</label>
+<label><input type="checkbox" id="iR"> правий кінець +∞</label>
+</div>
+<div class="read">
+<div>Нерівність: <b id="in"></b></div>
+<div>Проміжок: <b id="nt"></b></div>
+<div>Назва: <b id="nm" style="font-size:1.1rem"></b></div>
+</div>
+<div class="task">
+<p class="q" id="tq"></p>
+<p id="tf" aria-live="polite" style="margin:4px 0"></p>
+<div class="nav"><button class="b" id="tp">← Назад</button><button class="b" id="tc">Перевірити</button><button class="b" id="tn">Далі →</button></div>
+</div>
+</dialog>
+
+<dialog id="w2"><button class="b x" onclick="this.closest('dialog').close()">✕ Закрити</button>
+<h2>Місія 2. Шифри</h2>
+<p>Розшифруйте п'ять записів. Спочатку проміжки на одній прямій, а далі перетини й об'єднання двох проміжків.</p>
+<div id="q2"></div>
+</dialog>
+
+<dialog id="w3"><button class="b x" onclick="this.closest('dialog').close()">✕ Закрити</button>
+<h2>Місія 3. Сейф</h2>
+<p>На сейфі написано число. Позначте всі проміжки, до яких воно належить. Будьте уважні до кінців проміжків та ірраціональних чисел.</p>
+<div id="q3"></div>
+</dialog>
+
+<dialog id="w4"><button class="b x" onclick="this.closest('dialog').close()">✕ Закрити</button>
+<h2>Місія 4. Практика</h2>
+<p>У житті проміжки всюди: температура, швидкість, ціни, розклад. Переведіть умову задачі на мову проміжків. Звертайте увагу на слова «від», «понад», «не більше», «менше».</p>
+<div id="q4"></div>
+</dialog>
+
+<dialog id="w5"><button class="b x" onclick="this.closest('dialog').close()">✕ Закрити</button>
+<h2>Підсумковий тест</h2>
+<div id="q5"></div>
+</dialog>
+
+<div id="fin">
+<h2>Сейф відкрито!</h2>
+<p>Вихідний квиток: запишіть у зошиті одне число й три проміжки, до яких воно належить, а потім ще один, до якого не належить. Поясніть, чому кінець іноді має значення.</p>
+</div>
+
+</main>
+<script>
+const $=s=>document.querySelector(s),f=n=>String(n).replace('-','−');
+const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
+const T=(a,b,la,rb,iL=0,iR=0)=>({a,b,la:!!la,rb:!!rb,iL:!!iL,iR:!!iR});
+let svgId=0;
+const dot=(x,y,c,col='var(--acc)')=>`<circle cx="${x}" cy="${y}" r="8" fill="${c?col:'var(--card)'}" stroke="${col}" stroke-width="3"/>`;
+function line(c,w=700){
+ const id=++svgId,y0=58,X=v=>48+(v+6)*(w-96)/12;
+ const x1=c.iL?20:X(c.a),x2=c.iR?w-20:X(c.b);
+ let s=`<svg viewBox="0 0 ${w} 105" role="img" aria-label="числова пряма">
+ <defs><pattern id="h${id}" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="var(--seg)" stroke-width="2"/></pattern></defs>
+ <line x1="16" y1="${y0}" x2="${w-18}" y2="${y0}" stroke="var(--ink)" stroke-width="2"/>
+ <path d="M${w-18} ${y0}l-10-6v12z" fill="var(--ink)"/>
+ <text x="${w-10}" y="${y0-11}" text-anchor="end" font-size="17" font-style="italic" fill="var(--ink)">x</text>
+ <text x="18" y="24" text-anchor="middle" font-size="16" fill="var(--muted)">−∞</text>
+ <text x="${w-28}" y="24" text-anchor="middle" font-size="16" fill="var(--muted)">+∞</text>`;
+ for(let v=-6;v<=6;v++)s+=`<line x1="${X(v)}" y1="${y0-6}" x2="${X(v)}" y2="${y0+6}" stroke="var(--ink)"/><text x="${X(v)}" y="${y0+24}" text-anchor="middle" font-size="13" fill="var(--muted)">${f(v)}</text>`;
+ s+=`<rect x="${x1}" y="34" width="${Math.max(0,x2-x1)}" height="20" fill="url(#h${id})"/>`;
+ if(!c.iL){s+=`<line x1="${X(c.a)}" y1="34" x2="${X(c.a)}" y2="${y0}" stroke="var(--seg)" stroke-width="1.5"/>${dot(X(c.a),y0,c.la,'var(--acc)')}`}
+ if(!c.iR){s+=`<line x1="${X(c.b)}" y1="34" x2="${X(c.b)}" y2="${y0}" stroke="var(--seg)" stroke-width="1.5"/>${dot(X(c.b),y0,c.rb,'var(--acc)')}`}
+ return s+'</svg>';
+}
+function line2(A,B,Rs,w=700){
+ const id=++svgId,y0=90,X=v=>48+(v+6)*(w-96)/12;
+ const d=(x,y,c,col)=>`<circle cx="${x}" cy="${y}" r="7" fill="${c?col:'var(--card)'}" stroke="${col}" stroke-width="3"/>`;
+ const hatch=(c,top,bottom,col,pat,label,cy)=>{
+   const x1=X(c.a),x2=X(c.b);
+   return `<rect x="${x1}" y="${top}" width="${x2-x1}" height="${bottom-top}" fill="url(#${pat})"/>
+   <line x1="${x1}" y1="${cy}" x2="${x1}" y2="${y0}" stroke="var(--muted)" stroke-dasharray="4 4"/>
+   <line x1="${x2}" y1="${cy}" x2="${x2}" y2="${y0}" stroke="var(--muted)" stroke-dasharray="4 4"/>
+   ${d(x1,cy,c.la,col)}${d(x2,cy,c.rb,col)}
+   <text x="12" y="${cy+6}" font-size="18" font-weight="700" fill="${col}">${label}</text>`;
+ };
+ let s=`<svg viewBox="0 0 ${w} 180" role="img" aria-label="проміжки A над прямою, B під прямою">
+ <defs>
+   <pattern id="ha${id}" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#14908b" stroke-width="2"/></pattern>
+   <pattern id="hb${id}" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#e0a21a" stroke-width="2"/></pattern>
+ </defs>
+ ${hatch(A,50,70,'#14908b',`ha${id}`,'A',70)}
+ ${hatch(B,110,130,'#e0a21a',`hb${id}`,'B',110)}
+ <line x1="16" y1="${y0}" x2="${w-18}" y2="${y0}" stroke="var(--ink)" stroke-width="2"/>
+ <path d="M${w-18} ${y0}l-10-6v12z" fill="var(--ink)"/>
+ <text x="${w-10}" y="${y0-11}" text-anchor="end" font-size="17" font-style="italic" fill="var(--ink)">x</text>
+ <text x="18" y="28" text-anchor="middle" font-size="16" fill="var(--muted)">−∞</text>
+ <text x="${w-28}" y="28" text-anchor="middle" font-size="16" fill="var(--muted)">+∞</text>`;
+ for(let v=-6;v<=6;v++)s+=`<line x1="${X(v)}" y1="${y0-6}" x2="${X(v)}" y2="${y0+6}" stroke="var(--ink)"/><text x="${X(v)}" y="${y0+22}" text-anchor="middle" font-size="13" fill="var(--muted)">${f(v)}</text>`;
+ if(Rs)s+=`<line x1="${X(Rs.a)}" y1="${y0}" x2="${X(Rs.b)}" y2="${y0}" stroke="var(--acc)" stroke-width="9" stroke-linecap="round"/>${d(X(Rs.a),y0,Rs.la,'var(--acc)')}${d(X(Rs.b),y0,Rs.rb,'var(--acc)')}`;
+ return s+'</svg>';
+}
+const nt=c=>(c.iL?'(−∞':(c.la?'[':'(')+f(c.a))+'; '+(c.iR?'+∞)':f(c.b)+(c.rb?']':')'));
+const ineq=c=>c.iL&&c.iR?'x — будь-яке число':c.iL?`x ${c.rb?'≤':'<'} ${f(c.b)}`:c.iR?`x ${c.la?'≥':'>'} ${f(c.a)}`:`${f(c.a)} ${c.la?'≤':'<'} x ${c.rb?'≤':'<'} ${f(c.b)}`;
+const nm=c=>c.iL&&c.iR?'уся числова пряма':c.iL?(c.rb?'числовий промінь':'відкритий числовий промінь'):c.iR?(c.la?'числовий промінь':'відкритий числовий промінь'):c.la&&c.rb?'відрізок':!c.la&&!c.rb?'інтервал':'півінтервал';
+
+/* Місія 1 */
+const S=T(-2,3,1,0),ctl={};
+['a','b','la','rb','iL','iR'].forEach(k=>ctl[k]=$('#'+k));
+function up(e){
+ S.a=+ctl.a.value;S.b=+ctl.b.value;
+ if(S.b<=S.a){if(e&&e.target===ctl.b)S.a=S.b-1;else S.b=S.a+1;ctl.a.value=S.a;ctl.b.value=S.b}
+ S.la=ctl.la.checked;S.rb=ctl.rb.checked;S.iL=ctl.iL.checked;S.iR=ctl.iR.checked;
+ ctl.la.disabled=ctl.a.disabled=S.iL;ctl.rb.disabled=ctl.b.disabled=S.iR;
+ $('#v1').innerHTML=line(S);$('#in').textContent=ineq(S);$('#nt').textContent=nt(S);$('#nm').textContent=nm(S);
+}
+Object.values(ctl).forEach(el=>el.addEventListener('input',up));up();
+const mk=c=>({c,q:`Задай проміжок, що відповідає нерівності: ${ineq(c)}`});
+const P1=[mk(T(-3,2,1,0)),mk(T(0,4,0,0)),mk(T(-4,1,1,1)),mk(T(1,5,0,0,0,1)),mk(T(-5,3,0,1,1,0)),mk(T(-1,4,1,0)),mk(T(-2,2,0,1)),mk(T(-4,-1,0,0)),mk(T(0,3,1,0,0,1)),
+{c:T(-2,4,1,1),q:'Задай відрізок з кінцями −2 і 4.'},
+{c:T(1,5,0,0),q:'Задай інтервал з кінцями 1 і 5.'},
+{c:T(-3,1,1,0),q:'Задай проміжок: число −3 йому належить, число 1 не належить, а всі числа між ними належать.'},
+{c:T(-1,0,0,0,0,1),q:'Задай відкритий числовий промінь, що складається з усіх чисел, більших за −1.'},
+{c:T(0,2,0,1,1,0),q:'Задай числовий промінь, що складається з усіх чисел, не більших за 2.'}];
+const N=5,TG=sh(P1).slice(0,N);
+let ti=0;const dn=new Set();
+function tshow(){
+ $('#tq').textContent=`Задача ${ti+1} з ${N}. ${TG[ti].q}`+(dn.has(ti)?' ✓':'');
+ $('#tf').textContent=dn.has(ti)?'Правильно! Ця задача розв’язана.':'';
+ $('#tp').disabled=ti==0;$('#tn').disabled=ti==N-1;
+}
+$('#tc').onclick=()=>{
+ if(nt(S)===nt(TG[ti].c)){dn.add(ti);tshow();$('#tf').textContent=dn.size==N?'Правильно! Усі задачі виконано!':'Правильно!';if(dn.size==N)key(1)(true)}
+ else $('#tf').textContent='Ще не те. Перевір, які кінці входять у проміжок і де стоїть нескінченність.';
+};
+$('#tp').onclick=()=>{ti--;tshow()};$('#tn').onclick=()=>{ti++;tshow()};
+tshow();
+
+/* Рушій тестів */
+function quiz(box,gen,n,done){
+ let qs=[],st=[];
+ const reset=()=>{qs=[];st=[];show(0)};
+ function show(i){
+  if(i>=n){
+   const an=st.filter(x=>x&&x.d).length,sc=st.filter(x=>x&&x.ok).length;
+   box.innerHTML=`<p class="res">Результат: ${sc} з ${n}</p>${an<n?`<p>Без відповіді: ${n-an}. Поверніться до пропущених завдань.</p>`:''}<div class="nav"><button class="b" id="bk">← До завдань</button><button class="b" id="r">Ще раз</button></div>`;
+   box.querySelector('#bk').onclick=()=>show(n-1);box.querySelector('#r').onclick=reset;
+   done(an==n&&sc>=n-1);return}
+  const q=qs[i]||(qs[i]=gen()),s=st[i]||(st[i]={sel:new Set(),d:0,ok:0});
+  box.innerHTML=`<p class="cnt">Завдання ${i+1} з ${n}</p>${q.vis||''}<p class="q">${q.q}</p>${q.o.map(t=>`<button class="o">${t}</button>`).join('')}${q.m&&!s.d?'<button class="b" id="ck">Перевірити</button>':''}<p class="fb" aria-live="polite"></p><div class="nav"><button class="b" id="pv"${i?'':' disabled'}>← Назад</button><button class="b" id="nx">${i==n-1?'Результат':'Далі →'}</button></div>`;
+  const os=[...box.querySelectorAll('.o')];
+  os.forEach((b,k)=>{
+   if(s.d){b.disabled=true;if(q.m?q.c.includes(k):q.c===k)b.classList.add('ok');else if(s.sel.has(k))b.classList.add('no')}
+   else if(s.sel.has(k))b.classList.add('sel');
+   b.onclick=()=>{if(s.d)return;
+    if(q.m){s.sel.has(k)?s.sel.delete(k):s.sel.add(k);b.classList.toggle('sel')}
+    else{s.sel.add(k);fin(k===q.c)}};
+  });
+  const fin=ok=>{s.d=1;s.ok=ok?1:0;show(i)};
+  if(q.m&&!s.d)box.querySelector('#ck').onclick=()=>fin(s.sel.size==q.c.length&&q.c.every(k=>s.sel.has(k)));
+  if(s.d)box.querySelector('.fb').innerHTML=(s.ok?'<b>Правильно!</b> ':'<b>Майже.</b> ')+q.e+(q.ans||'');
+  box.querySelector('#pv').onclick=()=>show(i-1);
+  box.querySelector('#nx').onclick=()=>show(i+1);
+ }
+ show(0);
+}
+const mu=c=>[{...c,la:!c.la},{...c,rb:!c.rb},{...c,la:!c.la,rb:!c.rb},{...c,iL:c.iR,iR:c.iL,a:-c.b,b:-c.a,la:c.rb,rb:c.la},{...c,a:c.a+1},{...c,a:c.a-1},{...c,b:c.b+1}];
+function opts(c,ms,must=[]){
+ const r=nt(c),m=[...new Set(must.map(nt))].filter(t=>t!==r);
+ const rest=sh([...new Set(ms.map(nt))].filter(t=>t!==r&&!m.includes(t)));
+ const o=sh([r,...m,...rest].slice(0,4));return{o,c:o.indexOf(r)};
+}
+const g1=()=>{const a=ri(-5,3),b=ri(a+1,Math.min(5,a+4)),k=ri(0,5),c=T(a,b,ri(0,1),ri(0,1),k==4,k==5);
+ return{vis:line(c),q:'Який запис відповідає зображеному проміжку?',...opts(c,mu(c)),e:`${ineq(c)} — це ${nm(c)} ${nt(c)}.`}};
+const g2=()=>{let a1,a2,b1,b2;do{a1=ri(-5,-1);a2=a1+ri(1,2);b1=a2+ri(1,3);b2=b1+ri(1,2)}while(b2>6);
+ const A=T(a1,b1,ri(0,1),ri(0,1)),B=T(a2,b2,ri(0,1),ri(0,1)),op=ri(0,1);
+ const I=T(a2,b1,B.la,A.rb),U=T(a1,b2,A.la,B.rb),c=op?U:I;
+ return{vis:line2(A,B),ans:`<p class="lab">Відповідь виділена червоною лінією на осі:</p>${line2(A,B,c)}`,q:op?'Знайди A ∪ B: усе, що покрито хоча б одним проміжком':'Знайди A ∩ B: спільну частину проміжків',...opts(c,mu(c),[op?I:U]),e:`A ∩ B = ${nt(I)}, A ∪ B = ${nt(U)}.`}};
+const NUM=[['√7',Math.sqrt(7)],['π',Math.PI],['−√2',-Math.SQRT2],['5/3',5/3],['3',3],['−2',-2],['√10',Math.sqrt(10)],['0,5',.5]];
+const POOL=[T(0,3,0,0,1,0),T(0,3,0,1,1,0),T(3,0,1,0,0,1),T(3,0,0,0,0,1),T(-2,3,1,1),T(-2,3,0,0),T(1,4,0,1),T(2,5,1,0),T(0,-2,0,0,1,0),T(-2,0,1,0,0,1),T(-3,1,0,1)];
+const has=(c,v)=>(c.iL||(c.la?v>=c.a:v>c.a))&&(c.iR||(c.rb?v<=c.b:v<c.b));
+const g3=()=>{const[t,v]=NUM[ri(0,NUM.length-1)];let cs,ok;
+ do{cs=sh(POOL).slice(0,4);ok=cs.map((c,k)=>has(c,v)?k:-1).filter(k=>k>=0)}while(ok.length<1||ok.length>3);
+ return{q:`Число ${t} належить проміжкам:`,m:1,o:cs.map(nt),c:ok,e:`${t} ≈ ${v.toFixed(2).replace('.',',').replace('-','−')}. Підходять: ${ok.map(k=>nt(cs[k])).join(', ')}.`}};
+
+function key(n){return ok=>{if(ok){$('#k'+n).classList.add('got');if(document.querySelectorAll('.got').length==4)$('#fin').style.display='block'}}}
+quiz($('#q2'),()=>Math.random()<.5?g1():g2(),5,key(2));
+quiz($('#q3'),g3,4,key(3));
+const AP=[
+['Ліки зберігають за температури від +2 °C до +8 °C включно. Який проміжок описує допустимі температури?','[2; 8]',['(2; 8)','[2; 8)','(−∞; 8]'],'«Від … до … включно»: обидва кінці входять, це відрізок.'],
+['Швидкість у місті не повинна перевищувати 50 км/год. Автомобіль їде, тож швидкість додатна. Які швидкості дозволені?','(0; 50]',['[0; 50]','(0; 50)','(−∞; 50]'],'Автомобіль їде, тому 0 не підходить. «Не перевищувати» означає, що 50 дозволено.'],
+['На атракціон пускають дітей зростом понад 120 см, але не вище 190 см. Який проміжок зросту?','(120; 190]',['[120; 190]','(120; 190)','[120; 190)'],'«Понад 120» — без 120. «Не вище 190» — з 190.'],
+['Доставка безкоштовна для замовлень від 500 грн. Які суми підходять?','[500; +∞)',['(500; +∞)','(−∞; 500]','[0; 500]'],'«Від 500» включає 500. Біля +∞ дужка завжди кругла.'],
+['Знижка діє, якщо чек більший за 1000 грн. Які суми чека підходять?','(1000; +∞)',['[1000; +∞)','(−∞; 1000)','(0; 1000]'],'«Більший за» — строга нерівність, 1000 не входить.'],
+['Висота проїзду під мостом — менше 4 м. Які висоти автомобілів можуть проїхати?','(0; 4)',['(0; 4]','[0; 4)','(−∞; 4)'],'«Менше» — 4 м не проходить; висота додатна, тому 0 теж не входить.'],
+['pH розчину має бути не менше 6,5 і менше 7,5. Який проміжок?','[6,5; 7,5)',['(6,5; 7,5)','[6,5; 7,5]','(6,5; 7,5]'],'«Не менше 6,5» — кінець входить. «Менше 7,5» — не входить.'],
+['Сильним морозом вважають температуру нижче −5 °C. Який проміжок?','(−∞; −5)',['(−∞; −5]','[−5; +∞)','(−5; +∞)'],'Нижче — значить ліворуч від −5, самого −5 немає.'],
+['Ліки зберігають за температур [2; 8], а контейнер підтримує (0; 6]. За яких температур можна перевозити ліки в цьому контейнері?','[2; 6]',['(2; 6]','[2; 8]','(0; 8]'],'Потрібна спільна частина: [2; 8] ∩ (0; 6] = [2; 6].'],
+['Ранкова зміна працює [6; 14), вечірня [14; 22]. Який час покрито хоча б однією зміною?','[6; 22]',['[6; 14)','(6; 22]','[6; 22)'],'Об’єднання: 14 належить вечірній зміні, тож розриву немає.']
+];
+let bag=[];
+const g4=()=>{if(!bag.length)bag=sh(AP);const[q,r,w,e]=bag.pop(),o=sh([r,...w]);return{q,o,c:o.indexOf(r),e}};
+quiz($('#q4'),g4,6,key(4));
+/* Підсумковий тест */
+const S1=(q,r,w)=>{const o=sh([r,...w]);return{q,o,c:o.indexOf(r)}};
+const M1=(q,r,w)=>{const a=sh([...r.map(t=>[t,1]),...w.map(t=>[t,0])]);return{q,m:1,o:a.map(x=>x[0]),c:a.map((x,k)=>x[1]?k:-1).filter(k=>k>=0)}};
+const TB=[
+()=>{const c=T(-2,3,1,1);return{vis:line(c),q:'Який запис відповідає зображеному проміжку?',...opts(c,mu(c))}},
+()=>S1('Яка нерівність відповідає проміжку (−1; 4]?','−1 &lt; x ≤ 4',['−1 ≤ x &lt; 4','−1 &lt; x &lt; 4','−1 ≤ x ≤ 4']),
+()=>S1('Як називається проміжок [2; 7)?','півінтервал',['відрізок','інтервал','числовий промінь']),
+()=>S1('Який із проміжків є числовим променем?','(−∞; 3]',['[1; 5]','(0; 4)','(2; 6]']),
+()=>S1('Яке з чисел належить проміжку (−3; 2]?','2',['−3','3','−4']),
+()=>{const A=T(-4,1,1,1),B=T(-1,3,0,1),I=T(-1,1,0,1),U=T(-4,3,1,1);return{vis:line2(A,B),q:'Знайди A ∩ B.',...opts(I,mu(I),[U])}},
+()=>{const A=T(-5,-1,0,1),B=T(-3,2,0,0),U=T(-5,2,0,0),I=T(-3,-1,0,1);return{vis:line2(A,B),q:'Знайди A ∪ B.',...opts(U,mu(U),[I])}},
+()=>S1('Температура в теплиці має бути не нижче 18 °C і не вище 26 °C. Який проміжок описує допустимі температури?','[18; 26]',['(18; 26)','[18; 26)','(18; 26]']),
+()=>S1('Басейн відкритий у проміжок (10; 23], а спортзал у проміжок [8; 22]. У які години працюють обидва заклади одночасно?','(10; 22]',['[8; 23]','(10; 23]','[8; 22]']),
+()=>M1('Число √5 ≈ 2,24. Яким проміжкам воно належить? Оберіть усі правильні.',['(2; 3)','(−∞; √5]'],['[0; 2]','(√5; 4)']),
+()=>S1('Скільки цілих чисел належить проміжку (−2,5; 1]?','4',['3','5','6']),
+()=>S1('Дано A = (−∞; 4], B = [−1; +∞), C = (0; 7). Знайди A ∩ B ∩ C.','(0; 4]',['[−1; 4]','(0; 7)','[−1; 7)'])
+];
+function test(box){
+ const N=TB.length,esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ let name='',qs=[],an=[],warned=false;
+ function form(){
+  box.innerHTML=`<p>Тест із ${N} завдань: від найлегших до найскладніших. Кожне правильне завдання дає 1 бал, оцінка виставляється за 12-бальною шкалою. Підказок і пояснень під час тесту немає. Відповіді можна змінювати до завершення.</p><label style="display:block">Прізвище та ім’я<input type="text" id="sn" maxlength="40" autocomplete="off" placeholder="Наприклад: Шевченко Тарас" value="${esc(name)}"></label><p id="er" style="color:var(--no);margin:6px 0"></p><button class="b" id="go">Почати тест</button>`;
+  box.querySelector('#go').onclick=()=>{const v=box.querySelector('#sn').value.trim();
+   if(v.length<2){box.querySelector('#er').textContent='Введіть прізвище, щоб почати.';return}
+   name=v;qs=TB.map(f=>f());an=qs.map(()=>new Set());show(0)};
+ }
+ function show(i){
+  warned=false;const q=qs[i];
+  box.innerHTML=`<div class="chips">${qs.map((_,k)=>`<button class="chip${k==i?' cur':''}${an[k].size?' dn':''}" data-k="${k}" aria-label="Завдання ${k+1}">${k+1}</button>`).join('')}</div><p class="cnt">${esc(name)} · завдання ${i+1} з ${N}</p>${q.vis||''}<p class="q">${q.q}</p>${q.o.map(t=>`<button class="o">${t}</button>`).join('')}<p id="wr" style="color:var(--no);margin:6px 0" aria-live="polite"></p><div class="nav"><button class="b" id="pv"${i?'':' disabled'}>← Назад</button><button class="b" id="nx">${i==N-1?'Завершити тест':'Далі →'}</button></div>`;
+  box.querySelectorAll('.chip').forEach(b=>b.onclick=()=>show(+b.dataset.k));
+  box.querySelectorAll('.o').forEach((b,k)=>{if(an[i].has(k))b.classList.add('sel');
+   b.onclick=()=>{if(q.m){an[i].has(k)?an[i].delete(k):an[i].add(k)}else{an[i]=new Set([k])}show(i)}});
+  box.querySelector('#pv').onclick=()=>show(i-1);
+  box.querySelector('#nx').onclick=()=>{
+   if(i<N-1)return show(i+1);
+   const u=an.filter(x=>!x.size).length;
+   if(u&&!warned){warned=true;box.querySelector('#wr').textContent=`Завдань без відповіді: ${u}. Поверніться до них через номери зверху або натисніть «Завершити тест» ще раз.`;return}
+   finish()};
+ }
+ function finish(){
+  const ok=qs.map((q,k)=>{const a=an[k],c=q.m?q.c:[q.c];return a.size==c.length&&c.every(x=>a.has(x))});
+  const pts=ok.filter(Boolean).length,gr=Math.max(1,pts);
+  const lv=gr<=3?'початковий рівень':gr<=6?'середній рівень':gr<=9?'достатній рівень':'високий рівень';
+  box.innerHTML=`<div class="cert"><p class="lab">Підсумковий тест · Числові проміжки · Алгебра, 9 клас</p><p class="snm">${esc(name)}</p><p class="gr">Оцінка: <b>${gr}</b> з 12</p><p>Правильних відповідей: ${pts} з ${N} · ${lv}</p><div class="chips">${ok.map((v,k)=>`<span class="chip ${v?'ok':'no'}">${k+1} ${v?'✓':'✗'}</span>`).join('')}</div><p class="lab">${new Date().toLocaleDateString('uk-UA')}</p></div><p class="sub">Зробіть скріншот цього екрана й надішліть учителеві.</p><button class="b" id="again">Пройти ще раз</button>`;
+  box.querySelector('#again').onclick=form;
+ }
+ form();
+}
+test($('#q5'));
+document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>$('#'+b.dataset.w).showModal());
+</script>
+</body>
+</html>
